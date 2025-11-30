@@ -1,27 +1,55 @@
 <?php
 
-use App\Http\Controllers\StudentController;
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\Auth\LoginController; // Create this if wala pa
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
+// Homepage - redirect depende sa authentication
 Route::get('/', function () {
-    return view('welcome');
+    return Auth::check() ? redirect('/dashboard') : redirect('/login');
 })->name('home');
 
-// Dashboard routes
-Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
-Route::post('/dashboard', [StudentController::class, 'store'])->name('students.store'); // <-- ADD THIS
+// Login form
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+// Login POST
+Route::post('/login', [LoginController::class, 'login']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes (Protected)
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
 
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    Route::get('/dashboard', [VehicleController::class, 'index'])->name('dashboard');
+
+    // Vehicles CRUD (RESOURCES ONLY — DO NOT DUPLICATE)
+    Route::resource('vehicles', VehicleController::class);
+
+    // Brands CRUD
+    Route::resource('brands', BrandController::class);
+
+    // Profile
+    Route::get('/settings/profile', function() {
+        return view('settings.profile'); 
+    })->name('settings.profile');
+
+    // Logout
+    Route::post('/logout', function() {
+        Auth::logout();
+        return redirect('/login'); 
+    })->name('logout');
 });
-
-require __DIR__.'/auth.php';
-
-
