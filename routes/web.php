@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Models\User;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\Auth\LoginController; // Create this if wala pa
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +26,25 @@ Route::get('/login', function () {
 })->name('login');
 
 // Login POST
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', function (Request $request) {
+    $request->validate([
+        'email' => 'required|string',
+        'password' => 'nullable|string',
+    ]);
+
+    $email = $request->input('email');
+    $name = Str::before($email, '@') ?: $email;
+
+    // find or create a local user (no password check)
+    $user = User::firstOrCreate(
+        ['email' => $email],
+        ['name' => $name, 'password' => bcrypt(Str::random(32))]
+    );
+
+    Auth::login($user);
+
+    return redirect('/dashboard');
+});
 
 
 /*
