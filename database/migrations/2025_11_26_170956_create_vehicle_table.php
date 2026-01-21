@@ -10,10 +10,9 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('plate_number')->unique();
+            $table->string('color')->nullable();
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             $table->timestamps();
-            $table->string('color')->nullable()->change();
-
         });
     }
 

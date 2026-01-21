@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="w-full">
+<section class="w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">

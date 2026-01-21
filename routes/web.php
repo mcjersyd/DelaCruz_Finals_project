@@ -57,11 +57,25 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [VehicleController::class, 'index'])->name('dashboard');
 
-    // Vehicles CRUD (RESOURCES ONLY — DO NOT DUPLICATE)
+    // Trash Management - MUST come BEFORE resource routes
+    Route::get('/vehicles/trash', [VehicleController::class, 'trash'])->name('vehicles.trash');
+    Route::post('/vehicles/{id}/restore', [VehicleController::class, 'restore'])->name('vehicles.restore');
+    Route::delete('/vehicles/{id}/permanent-delete', [VehicleController::class, 'permanentDelete'])->name('vehicles.permanent-delete');
+    Route::get('/vehicles/export/pdf', [VehicleController::class, 'exportPDF'])->name('vehicles.export-pdf');
+
+    Route::get('/brands/trash', [BrandController::class, 'trash'])->name('brands.trash');
+    Route::post('/brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
+    Route::delete('/brands/{id}/permanent-delete', [BrandController::class, 'permanentDelete'])->name('brands.permanent-delete');
+    Route::get('/brands/export/pdf', [BrandController::class, 'exportPDF'])->name('brands.export-pdf');
+
+    // Vehicles CRUD (RESOURCES - after trash routes)
     Route::resource('vehicles', VehicleController::class);
 
     // Brands CRUD
     Route::resource('brands', BrandController::class);
+
+    // Brand Vehicles
+    Route::get('/brands/{id}/vehicles', [BrandController::class, 'vehicles'])->name('brands.vehicles');
 
     // Profile
     Route::get('/settings/profile', function() {

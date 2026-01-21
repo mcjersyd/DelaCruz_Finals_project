@@ -22,12 +22,22 @@
                         Dashboard
                     </flux:navlist.item>
 
-                    <flux:navlist.item icon="truck" :href="route('vehicles.index')" :current="request()->routeIs('vehicles.*')">
+                    <flux:navlist.item icon="truck" href="#vehicles" :current="request()->routeIs('dashboard')">
                         Vehicles
                     </flux:navlist.item>
 
-                    <flux:navlist.item icon="cube" :href="route('brands.index')" :current="request()->routeIs('brands.*')">
+                    <flux:navlist.item icon="cube" href="#brands" :current="request()->routeIs('dashboard')">
                         Brands
+                    </flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Trash & Management')">
+                    <flux:navlist.item icon="trash" :href="route('vehicles.trash')" :current="request()->routeIs('vehicles.trash')">
+                        Vehicles Trash
+                    </flux:navlist.item>
+
+                    <flux:navlist.item icon="trash" :href="route('brands.trash')" :current="request()->routeIs('brands.trash')">
+                        Brands Trash
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
@@ -42,7 +52,15 @@
                 <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
                     Documentation
                 </flux:navlist.item>
+
+                <flux:navlist.item icon="arrow-right-start-on-rectangle" x-data @click="document.getElementById('logout-form').submit()">
+                    Logout
+                </flux:navlist.item>
             </flux:navlist>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
 
        
 

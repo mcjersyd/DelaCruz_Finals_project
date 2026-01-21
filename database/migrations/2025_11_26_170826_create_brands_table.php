@@ -10,14 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->unique();
             $table->timestamps();
-            $request->validate([
-    'brand_name' => 'required|string|max:255|unique:brands,brand_name',
-]);
-Brand::create([
-    'brand_name' => $request->brand_name,
-]);
-
-    });
+        });
     }
 
     public function down(): void {

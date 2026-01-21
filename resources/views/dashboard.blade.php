@@ -82,11 +82,21 @@
         <!-- Add Brand Form -->
         <div class="p-4 bg-gray-50 border rounded">
             <h3>Add New Brand</h3>
-            <form action="{{ route('brands.store') }}" method="POST" class="grid md:grid-cols-2 gap-4">
+            <form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data" class="grid md:grid-cols-2 gap-4">
                 @csrf
-                <input type="text" name="name" placeholder="Brand Name" class="border p-2 rounded">
+                <input type="text" name="name" placeholder="Brand Name" class="border p-2 rounded" required>
+                <input type="file" name="photo" placeholder="Brand Photo" class="border p-2 rounded" accept="image/*">
                 <button type="submit" class="bg-blue-500 text-white p-2 rounded md:col-span-2">Add Brand</button>
             </form>
+            @if($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-3">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
 
         <!-- Brands Table -->
